@@ -12,9 +12,11 @@
         system:
         let
           pkgs = nixpkgs.legacyPackages.${system};
+          nix = pkgs.nixVersions.latest;
           profile-packages = pkgs.buildEnv {
             name = "profile-packages";
             paths = [
+              nix
               pkgs.atuin
               pkgs.dnsutils
               pkgs.git-repo
@@ -24,7 +26,6 @@
               pkgs.mise
               pkgs.nixd
               pkgs.nixfmt
-              pkgs.nixVersions.latest
               pkgs.patch
               pkgs.starship
               pkgs.texlive.combined.scheme-full
@@ -39,9 +40,12 @@
               "man"
             ];
           };
+          get-fallback-paths = pkgs.writeShellScriptBin "get-fallback-paths" ''
+            ${pkgs.curl}/bin/curl 'https://releases.nixos.org/nix/nix-${nix.version}/fallback-paths.nix'
+          '';
         in
         {
-          inherit profile-packages;
+          inherit get-fallback-paths profile-packages;
         };
     in
     {
