@@ -18,7 +18,6 @@
             paths = [
               nix
               pkgs.atuin
-              pkgs.dnsutils
               pkgs.git-repo
               pkgs.gnupg
               pkgs.gnused
