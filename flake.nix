@@ -13,10 +13,21 @@
         let
           pkgs = nixpkgs.legacyPackages.${system};
           nix = pkgs.nixVersions.latest;
+
+          # Avoid garbage-collecting nixpkgs sources for the installed profile
+          nixpkgs-source = pkgs.stdenvNoCC.mkDerivation {
+            name = "nixpkgs-source";
+            buildCommand = ''
+              mkdir -p "$out/share"
+              ln -s "${nixpkgs}" "$out/share/nixpkgs"
+            '';
+          };
+
           profile-packages = pkgs.buildEnv {
             name = "profile-packages";
             paths = [
               nix
+              nixpkgs-source
               pkgs.atuin
               pkgs.git-repo
               pkgs.gnupg
@@ -39,6 +50,7 @@
               "man"
             ];
           };
+
           get-fallback-paths = pkgs.writeShellScriptBin "get-fallback-paths" ''
             ${pkgs.curl}/bin/curl 'https://releases.nixos.org/nix/nix-${nix.version}/fallback-paths.nix'
           '';
