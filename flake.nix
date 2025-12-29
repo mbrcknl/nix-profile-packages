@@ -14,7 +14,8 @@
           pkgs = nixpkgs.legacyPackages.${system};
           nix = pkgs.nixVersions.latest;
 
-          # Avoid garbage-collecting nixpkgs sources for the installed profile
+          # mkdir -p ~/.nix-defexpr/channels
+          # ln -s ~/.nix-profile/share/nixpkgs ~/.nix-defexpr/channels
           nixpkgs-source = pkgs.stdenvNoCC.mkDerivation {
             name = "nixpkgs-source";
             buildCommand = ''
