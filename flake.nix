@@ -7,6 +7,7 @@
       inherit (nixpkgs) lib;
 
       systems = [ "aarch64-darwin" ];
+      nixpkgs-lock = (lib.importJSON ./flake.lock).nodes.nixpkgs;
 
       mkPackages =
         system:
@@ -14,14 +15,38 @@
           pkgs = nixpkgs.legacyPackages.${system};
           nix = pkgs.nixVersions.latest;
 
-          # mkdir -p ~/.nix-defexpr/channels
+          # mkdir -p ~/.nix-defexpr/channels ~/.config/nix
           # ln -s ~/.nix-profile/share/nixpkgs ~/.nix-defexpr/channels
+          # ln -s ~/.nix-profile/etc/nix/registry.json ~/config/nix
           nixpkgs-source = pkgs.stdenvNoCC.mkDerivation {
             name = "nixpkgs-source";
             buildCommand = ''
-              mkdir -p "$out/share"
+              mkdir -p "$out/share" "$out/etc/nix"
               ln -s "${nixpkgs}" "$out/share/nixpkgs"
+              ln -s "${nixpkgs-flake-registry-json}" "$out/etc/nix/registry.json"
             '';
+          };
+
+          nixpkgs-flake-registry-json = pkgs.writers.writeJSON "nixpkgs-flake-registry.json" {
+            version = 2;
+            flakes = [
+              {
+                from = {
+                  type = "indirect";
+                  id = "nixpkgs";
+                };
+                to = {
+                  inherit (nixpkgs-lock.original) ref;
+                  inherit (nixpkgs-lock.locked)
+                    type
+                    narHash
+                    owner
+                    repo
+                    rev
+                    ;
+                };
+              }
+            ];
           };
 
           profile-packages = pkgs.buildEnv {
