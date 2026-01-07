@@ -64,6 +64,7 @@
               pkgs.nixd
               pkgs.nixfmt
               pkgs.patch
+              pkgs.podman
               pkgs.starship
               pkgs.texlive.combined.scheme-full
               pkgs.uv
