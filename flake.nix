@@ -7,7 +7,32 @@
       inherit (nixpkgs) lib;
 
       systems = [ "aarch64-darwin" ];
+
+      packages = lib.genAttrs systems mkPackages;
+
       nixpkgs-lock = (lib.importJSON ./flake.lock).nodes.nixpkgs;
+
+      flake-registry = {
+        version = 2;
+        flakes = [
+          {
+            from = {
+              type = "indirect";
+              id = "nixpkgs";
+            };
+            to = {
+              inherit (nixpkgs-lock.original) ref;
+              inherit (nixpkgs-lock.locked)
+                type
+                narHash
+                owner
+                repo
+                rev
+                ;
+            };
+          }
+        ];
+      };
 
       mkPackages =
         system:
@@ -23,31 +48,11 @@
             buildCommand = ''
               mkdir -p "$out/share" "$out/etc/nix"
               ln -s "${nixpkgs}" "$out/share/nixpkgs"
-              ln -s "${nixpkgs-flake-registry-json}" "$out/etc/nix/registry.json"
+              ln -s "${flake-registry-json}" "$out/etc/nix/registry.json"
             '';
           };
 
-          nixpkgs-flake-registry-json = pkgs.writers.writeJSON "nixpkgs-flake-registry.json" {
-            version = 2;
-            flakes = [
-              {
-                from = {
-                  type = "indirect";
-                  id = "nixpkgs";
-                };
-                to = {
-                  inherit (nixpkgs-lock.original) ref;
-                  inherit (nixpkgs-lock.locked)
-                    type
-                    narHash
-                    owner
-                    repo
-                    rev
-                    ;
-                };
-              }
-            ];
-          };
+          flake-registry-json = pkgs.writers.writeJSON "nixpkgs-flake-registry.json" flake-registry;
 
           profile-packages = pkgs.buildEnv {
             name = "profile-packages";
@@ -88,7 +93,7 @@
         };
     in
     {
-      checks = lib.genAttrs systems mkPackages;
-      packages = lib.genAttrs systems mkPackages;
+      inherit packages;
+      checks = packages;
     };
 }
