@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-fallback_paths=$(nix run .#get-fallback-paths)
-cat <<< "$fallback_paths" > nix/fallback-paths.nix
+fallback_paths="$(nix build --print-out-paths --no-link .#fallback-paths)"
+cp "$fallback_paths" nix/fallback-paths.nix
 
 git add nix/fallback-paths.nix
 

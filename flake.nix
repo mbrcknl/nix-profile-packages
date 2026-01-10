@@ -10,6 +10,9 @@
 
       packages = lib.genAttrs systems mkPackages;
 
+      nixPaths = lib.mapAttrs (_: p: "${p.nix}") packages;
+      nixPathsPretty = lib.generators.toPretty { } nixPaths + "\n";
+
       nixpkgs-lock = (lib.importJSON ./flake.lock).nodes.nixpkgs;
 
       flake-registry = {
@@ -53,6 +56,7 @@
           };
 
           flake-registry-json = pkgs.writers.writeJSON "nixpkgs-flake-registry.json" flake-registry;
+          fallback-paths = pkgs.writeText "nix-fallback-paths.nix" nixPathsPretty;
 
           profile-packages = pkgs.buildEnv {
             name = "profile-packages";
@@ -83,13 +87,9 @@
               "man"
             ];
           };
-
-          get-fallback-paths = pkgs.writeShellScriptBin "get-fallback-paths" ''
-            ${pkgs.curl}/bin/curl 'https://releases.nixos.org/nix/nix-${nix.version}/fallback-paths.nix'
-          '';
         in
         {
-          inherit get-fallback-paths profile-packages;
+          inherit fallback-paths nix profile-packages;
         };
     in
     {
