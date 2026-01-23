@@ -13,19 +13,18 @@
       nixPaths = lib.mapAttrs (_: p: "${p.nix}") packages;
       nixPathsPretty = lib.generators.toPretty { } nixPaths + "\n";
 
-      nixpkgs-lock = (lib.importJSON ./flake.lock).nodes.nixpkgs;
+      nixpkgs-lock = (lib.importJSON ./flake.lock).nodes.nixpkgs.locked;
 
       flake-registry = {
         version = 2;
         flakes = [
           {
             from = {
-              type = "indirect";
               id = "nixpkgs";
+              type = "indirect";
             };
             to = {
-              inherit (nixpkgs-lock.original) ref;
-              inherit (nixpkgs-lock.locked)
+              inherit (nixpkgs-lock)
                 type
                 narHash
                 owner
