@@ -63,6 +63,7 @@
               nix
               nixpkgs-source
               pkgs.atuin
+              pkgs.gh
               pkgs.git-repo
               pkgs.gnupg
               pkgs.gnused
