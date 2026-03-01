@@ -72,6 +72,7 @@
               pkgs.nerd-fonts.fira-code
               pkgs.nixd
               pkgs.nixfmt
+              pkgs.nodejs_latest
               pkgs.patch
               pkgs.podman
               pkgs.starship
