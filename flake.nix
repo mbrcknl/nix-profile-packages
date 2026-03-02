@@ -82,6 +82,12 @@
               pkgs.whois
               pkgs.xz
               pkgs.zstd
+
+              # seL4
+              pkgs.cmake
+              pkgs.ninja
+              pkgs.dtc
+              pkgs.pkgsCross.aarch64-multiplatform.buildPackages.gcc
             ];
             extraOutputsToInstall = [
               "doc"
