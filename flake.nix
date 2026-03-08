@@ -75,6 +75,7 @@
               pkgs.nodejs_latest
               pkgs.patch
               pkgs.podman
+              pkgs.ripgrep
               pkgs.starship
               pkgs.texlive.combined.scheme-full
               pkgs.uv
