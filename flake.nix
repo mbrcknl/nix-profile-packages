@@ -77,7 +77,7 @@
               pkgs.podman
               pkgs.ripgrep
               pkgs.starship
-              pkgs.texlive.combined.scheme-full
+              pkgs.texliveFullWithDocs
               pkgs.uv
               pkgs.wget
               pkgs.whois
