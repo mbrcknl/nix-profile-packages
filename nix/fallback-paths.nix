@@ -1,3 +1,3 @@
 {
-  aarch64-darwin = "/nix/store/dn1js11h2dh09ncp8823bad760mnb9ix-nix-2.35.1";
+  aarch64-darwin = "/nix/store/d7lgmacaykm2gbd305vdlb5xxsfnvb0n-nix-2.35.2";
 }
