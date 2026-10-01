@@ -86,8 +86,11 @@
 
               # seL4
               pkgs.cmake
-              pkgs.ninja
               pkgs.dtc
+              pkgs.mlton
+              pkgs.ninja
+
+              # seL4 cross compilers
               pkgs.pkgsCross.aarch64-multiplatform.buildPackages.gcc
             ];
             extraOutputsToInstall = [
