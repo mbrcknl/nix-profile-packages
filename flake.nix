@@ -89,6 +89,7 @@
               pkgs.dtc
               pkgs.mlton
               pkgs.ninja
+              pkgs.stack
 
               # seL4 cross compilers
               pkgs.pkgsCross.aarch64-multiplatform.buildPackages.gcc
