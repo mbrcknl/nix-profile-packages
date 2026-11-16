@@ -93,6 +93,9 @@
 
               # seL4 cross compilers
               pkgs.pkgsCross.aarch64-multiplatform.buildPackages.gcc
+              pkgs.pkgsCross.arm-embedded.buildPackages.gcc
+              pkgs.pkgsCross.riscv64.buildPackages.gcc
+              pkgs.pkgsCross.gnu64.buildPackages.gcc
             ];
             extraOutputsToInstall = [
               "doc"
